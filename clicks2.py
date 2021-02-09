@@ -27,11 +27,11 @@ def mouse_callback(event, x, y, flags, params):
     global right_image
 
     if (counter % 2) == 1:
-      right_image.append((y, x)) #right side
+      right_image.append((x, y)) #right side
       print("Right side image coord: {0} ".format(right_image))
       print('Action: Click LEFT side image point')
     else:
-      left_image.append((y, x)) #left side
+      left_image.append((x, y)) #left side
       print("Left side image coord: {0} ".format(left_image))
       print('Action: Click RIGHT side CORRESPONDING point')
 
@@ -58,10 +58,18 @@ print('RightImages merged: {0}'.format(right_image))
 
 right_image2=[]
 for index,value in enumerate(right_image):
-  right_image2.append((value[0],value[1]-img1.shape[1]))
+  right_image2.append((value[1],value[0]-img1.shape[1]))
 
 
 print('\nLeftImages individual: {0}'.format(left_image))
 print('RightImages individual: {0}'.format(right_image2))
 
+for ind,coord in enumerate(left_image):
+  # image = cv2.circle(image, center_coordinates, radius, color, thickness)
+  cv.circle(img, (coord[0], coord[1]), 3, (255, 0, 0), -1)
+  cv.circle(img, (right_image[ind][0], right_image[ind][1]), 3, (255, 0, 0), -1)
+  cv.line(img, (left_image[ind]), (right_image[ind]), (0, 255, 0), thickness=1, lineType=8)
 
+
+cv.imshow('img', img)
+cv.waitKey(0)
