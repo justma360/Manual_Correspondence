@@ -27,11 +27,11 @@ def mouse_callback(event, x, y, flags, params):
     global right_image
 
     if (counter % 2) == 1:
-      right_image.append([y, x-img1.shape[1]])
+      right_image.append((y, x)) #right side
       print("Right side image coord: {0} ".format(right_image))
       print('Action: Click LEFT side image point')
     else:
-      left_image.append([y, x])
+      left_image.append((y, x)) #left side
       print("Left side image coord: {0} ".format(left_image))
       print('Action: Click RIGHT side CORRESPONDING point')
 
@@ -53,5 +53,15 @@ cv.waitKey(0)
 cv.destroyAllWindows()
 
 
+print('\nLeftImages merged: {0}'.format(left_image))
+print('RightImages merged: {0}'.format(right_image))
+
+right_image2=[]
+for index,value in enumerate(right_image):
+  right_image2.append((value[0],value[1]-img1.shape[1]))
+
+
 print('\nLeftImages individual: {0}'.format(left_image))
-print('RightImages individual: {0}'.format(right_image))
+print('RightImages individual: {0}'.format(right_image2))
+
+
