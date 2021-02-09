@@ -5,8 +5,8 @@ file_base =os.getcwd()
 
 print(file_base+"\images\IMG_6091.jpeg")
 
-img1 = cv.imread(file_base+"\images\IMG_6091.jpeg", 0)
-img2 = cv.imread(file_base+"\images\IMG_6100.jpeg", 0)
+img1 = cv.imread(file_base+"\images\IMG_6031.jpeg", 0)
+img2 = cv.imread(file_base+"\images\IMG_6027.jpeg", 0)
 img1 = cv.cvtColor(img1,cv.COLOR_GRAY2BGR)
 img2 = cv.cvtColor(img2,cv.COLOR_GRAY2BGR)
 
@@ -53,23 +53,30 @@ cv.waitKey(0)
 cv.destroyAllWindows()
 
 
-print('\nLeftImages merged: {0}'.format(left_image))
-print('RightImages merged: {0}'.format(right_image))
+print('\nLeftImages={0}'.format(left_image))
+print('RightImages={0}'.format(right_image))
 
 right_image2=[]
 for index,value in enumerate(right_image):
   right_image2.append((value[1],value[0]-img1.shape[1]))
 
 
-print('\nLeftImages individual: {0}'.format(left_image))
-print('RightImages individual: {0}'.format(right_image2))
+print('\npts1={0}'.format(left_image))
+print('pts2={0}'.format(right_image2))
+
+circle_parameters = dict(thickness=1, # colour of the good connections
+                   color=(255, 0, 0), # collour of all key points
+                   radius=3
+                   ) 
 
 for ind,coord in enumerate(left_image):
   # image = cv2.circle(image, center_coordinates, radius, color, thickness)
-  cv.circle(img, (coord[0], coord[1]), 3, (255, 0, 0), -1)
-  cv.circle(img, (right_image[ind][0], right_image[ind][1]), 3, (255, 0, 0), -1)
-  cv.line(img, (left_image[ind]), (right_image[ind]), (0, 255, 0), thickness=1, lineType=8)
+  cv.circle(img, (coord[0], coord[1]), **circle_parameters)
+  cv.circle(img, (right_image[ind][0], right_image[ind][1]), **circle_parameters)
 
+  cv.line(img, (left_image[ind]), (right_image[ind]), (0, 255, 0), thickness=2, lineType=8)
 
+cv.namedWindow('img', cv.WINDOW_NORMAL)
+cv.resizeWindow('img', window_width, window_height)
 cv.imshow('img', img)
 cv.waitKey(0)
