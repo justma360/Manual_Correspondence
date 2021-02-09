@@ -1,9 +1,12 @@
 import cv2 as cv
+import os 
 
-file_base = "C:/Users/Justin/Documents/Work/Imperial_College_London/Projects/CVPR_CW1/images/"
+file_base =os.getcwd()
 
-img1 = cv.imread(file_base+"IMG_6091.jpeg", 0)
-img2 = cv.imread(file_base+"IMG_6100.jpeg", 0)
+print(file_base+"\images\IMG_6091.jpeg")
+
+img1 = cv.imread(file_base+"\images\IMG_6091.jpeg", 0)
+img2 = cv.imread(file_base+"\images\IMG_6100.jpeg", 0)
 img1 = cv.cvtColor(img1,cv.COLOR_GRAY2BGR)
 img2 = cv.cvtColor(img2,cv.COLOR_GRAY2BGR)
 
