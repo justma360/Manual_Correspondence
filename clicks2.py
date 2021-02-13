@@ -58,7 +58,7 @@ print('RightImages={0}'.format(right_image))
 
 right_image2=[]
 for index,value in enumerate(right_image):
-  right_image2.append((value[1],value[0]-img1.shape[1]))
+  right_image2.append((value[0]-img1.shape[1],value[1]))
 
 
 print('\npts1={0}'.format(left_image))
@@ -80,3 +80,5 @@ cv.namedWindow('img', cv.WINDOW_NORMAL)
 cv.resizeWindow('img', window_width, window_height)
 cv.imshow('img', img)
 cv.waitKey(0)
+
+# points are stored as (columns,rows) (x,y) 
