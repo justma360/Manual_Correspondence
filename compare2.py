@@ -38,48 +38,52 @@ circle_parameters = dict(thickness=3, # colour of the good connections
 def calc_average(lst): 
     return sum(lst) / len(lst) 
 
+print(allPoints[0][0])
 
 descriptor=[]
-for index,kPSets in enumerate(allPoints): 
-  descriptor.append([])
-  for keyPoints in kPSets:
-    print('keypoint location {0}'.format(keyPoints))
-    # for the x coord within 5 window
-    windowIntensity=[]
-    lowerIbound=keyPoints[1]-math.floor(window/2) # I = rows = y = points(x,y) index 1
-    upperIbound=keyPoints[1]+math.ceil(window/2)
-    lowerJbound=keyPoints[0]-math.floor(window/2)
-    upperJbound=keyPoints[0]+math.ceil(window/2)
-    if lowerIbound<0:
-      lowerIbound=0
-    if upperIbound>=img1.shape[0]:
-      upperIbound=img1.shape[0]
-    if lowerJbound<0:
-      lowerJbound=0
-    if upperJbound>=img1.shape[1]:
-      upperJbound=img1.shape[1]
+
+for index in range(0,len(allPoints[0])):
+  print('keypoint {0}'.format(index))
+
+  windowIntensity=[]
+  lowerIbound=[None]*2
+  upperIbound=[None]*2
+  lowerJbound=[None]*2
+  upperJbound=[None]*2
 
 
-    if index == 0:
-      cv.circle(img1, (keyPoints[0], keyPoints[1]), **circle_parameters)
-      img1KP[lowerIbound:upperIbound,lowerJbound:upperJbound,:]=img1[lowerIbound:upperIbound,lowerJbound:upperJbound,:]/255
-      windowIntensity=np.average(img1[lowerIbound:upperIbound,lowerJbound:upperJbound,0])
+  for keypointPairs,_ in enumerate(allPoints):
+    lowerIbound[keypointPairs]=allPoints[keypointPairs][index][1]-math.floor(window/2) # I = rows = y = points(x,y) index 1
+    upperIbound[keypointPairs]=allPoints[keypointPairs][index][1]+math.ceil(window/2)
+    lowerJbound[keypointPairs]=allPoints[keypointPairs][index][0]-math.floor(window/2)
+    upperJbound[keypointPairs]=allPoints[keypointPairs][index][0]+math.ceil(window/2)
 
-    elif index== 1:
-      cv.circle(img2, (keyPoints[0], keyPoints[1]), **circle_parameters)
-      img2KP[lowerIbound:upperIbound,lowerJbound:upperJbound,:]=img2[lowerIbound:upperIbound,lowerJbound:upperJbound,:]/255
-      windowIntensity=np.average(img2[lowerIbound:upperIbound,lowerJbound:upperJbound,0])
+    if lowerIbound[keypointPairs]<0:
+      lowerIbound[keypointPairs]=0
+    if upperIbound[keypointPairs]>=img1.shape[0]:
+      upperIbound[keypointPairs]=img1.shape[0]
+    if lowerJbound[keypointPairs]<0:
+      lowerJbound[keypointPairs]=0
+    if upperJbound[keypointPairs]>=img1.shape[1]:
+      upperJbound[keypointPairs]=img1.shape[1]
 
-    #find average intensity of each window
-    descriptor[index].append((windowIntensity))
 
-print(descriptor)
-diff=[]
-for index in range(0,len(descriptor[0])): 
-  diff.append(abs(descriptor[0][index]-descriptor[1][index]))
+  cv.circle(img1, (allPoints[0][index][0], allPoints[0][index][1]), **circle_parameters)
+  img1KP[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , :]=img1[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , :]/255
 
-print(diff)
-print('Average Difference {0}'.format(calc_average(diff)))
+
+  cv.circle(img2, (allPoints[1][index][0], allPoints[1][index][1]), **circle_parameters)
+  img2KP[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] ,:]=img2[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] ,:]/255
+
+
+  mse = (np.square(img1[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , 0]  - img2[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] , 0])).mean(axis=None)
+
+  descriptor.append(mse)
+  
+
+print((descriptor))
+print('Average MSE for all keypoints {0}'.format(calc_average(descriptor)))
+
 
 # Plotting the images 
 fig, axes = plt.subplots(ncols=2,figsize=(20,10))
