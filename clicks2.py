@@ -5,8 +5,8 @@ file_base =os.getcwd()
 
 print(file_base+"\images\IMG_6091.jpeg")
 
-img1 = cv.imread(file_base+"\images\IMG_6031.jpeg", 0)
-img2 = cv.imread(file_base+"\images\IMG_6027.jpeg", 0)
+img1 = cv.imread(file_base+"\images\IMG_0114.jpeg", 0)
+img2 = cv.imread(file_base+"\images\IMG_0117.jpeg", 0)
 img1 = cv.cvtColor(img1,cv.COLOR_GRAY2BGR)
 img2 = cv.cvtColor(img2,cv.COLOR_GRAY2BGR)
 

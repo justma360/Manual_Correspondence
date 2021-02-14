@@ -40,9 +40,12 @@ def calc_average(lst):
 
 print(allPoints[0][0])
 
+descriptorMSEWindowDiff=[]
 descriptorMSEPixelDiff=[]
 descriptorWindowDiff=[]
 descriptorPixelDiff=[]
+matchTemplateScore=[]
+
 for index in range(0,len(allPoints[0])):
   print('keypoint {0}'.format(index))
 
@@ -76,38 +79,53 @@ for index in range(0,len(allPoints[0])):
   cv.circle(img2, (allPoints[1][index][0], allPoints[1][index][1]), **circle_parameters)
   img2KP[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] ,:]=img2[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] ,:]/255
 
-  # (KP1 window - KP2 window)^2 . mean (pixel by pixel difference) 
+  # (KP1 pixel - KP2 pixel)^2 . mean (pixel by pixel difference) 
   mse = (\
     np.square(\
     img1[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , 0]\
      - img2[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] , 0])\
        ).mean(axis=None)
 
-  #absolute mean pixel diff
+  mseWindow = np.square(\
+    (img1[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , 0]).mean(axis=None)\
+     - (img2[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] , 0]).mean(axis=None))
+
+  # return = mean of abs(arrayIMG1 - arrayIMG2)  difference in each pixel 
   pixelDiff = (abs(\
     ( img1[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , 0]\
       - img2[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] , 0])\
         )).mean(axis=None)\
 
-  # avg(KP1 window)  - avg(KP2 window)    (window by window difference)
+  # mean(KP1 window)  - mean(KP2 window)    (mean window by window difference)
   WindowDiff = abs(\
     (img1[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , 0]).mean(axis=None)\
       - (img2[lowerIbound[1]:upperIbound[1] , lowerJbound[1]:upperJbound[1] , 0]).mean(axis=None)\
         )
 
+  
+  score=cv.matchTemplate(img1[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , 0], img2[lowerIbound[0]:upperIbound[0] , lowerJbound[0]:upperJbound[0] , 0], cv.TM_SQDIFF_NORMED);
+
+
+  descriptorMSEWindowDiff.append(mseWindow)
   descriptorMSEPixelDiff.append(mse)
   descriptorWindowDiff.append(WindowDiff)
   descriptorPixelDiff.append(pixelDiff)
+  matchTemplateScore.append(score[0][0])
 
   
 
+print(descriptorMSEWindowDiff)
 print(descriptorMSEPixelDiff)
 print(descriptorWindowDiff)
 print(descriptorPixelDiff)
-print('Average MSE PixelDiff {0}\n \
-  Average raw Window Diff {1}\n \
-  Average raw Pixel Diff {2}  '\
-  .format(calc_average(descriptorMSEPixelDiff),calc_average(descriptorWindowDiff), calc_average(descriptorPixelDiff)))
+print(matchTemplateScore)
+
+print('Average MSE WindowDif {0}'.format(calc_average(descriptorMSEWindowDiff)))
+print('Average MSE PixelDif {0}'.format(calc_average(descriptorMSEPixelDiff)))
+print('Average raw Window Diff {0}'.format(calc_average(descriptorWindowDiff)))
+print('Average raw Pixel Diff {0}'.format(calc_average(descriptorPixelDiff)))
+print('matchTemplate SQ Diff Normed {0}'.format(calc_average(matchTemplateScore)))
+
 
 
 # Plotting the images 
@@ -123,3 +141,6 @@ axes[1].set_axis_off()
 
 plt.show()
 
+print(img1[10:12, 10:12 , 0])
+print(img2[10:12, 10:12 , 0])
+print(img1[10:12, 10:12 , 0] - img2[10:12, 10:12 , 0])
