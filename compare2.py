@@ -15,14 +15,14 @@ img2 = cv.cvtColor(img2,cv.COLOR_GRAY2BGR)
 
 
 # coord of the key points from manual selection
-# pts1=[(697, 1026), (698, 778), (1258, 884), (1425, 872), (1238, 778), (953, 1001), (1029, 1042), (1342, 1097), (1174, 677)]
-# pts2=[(580, 842), (728, 613), (1117, 816), (1306, 844), (1173, 708), (805, 868), (868, 922), (1136, 1053), (1193, 586)]
+pts1=[(697, 1026), (698, 778), (1258, 884), (1425, 872), (1238, 778), (953, 1001), (1029, 1042), (1342, 1097), (1174, 677)]
+pts2=[(580, 842), (728, 613), (1117, 816), (1306, 844), (1173, 708), (805, 868), (868, 922), (1136, 1053), (1193, 586)]
 
-# points from SIFT 
-pts1=np.load(file_base+'\keypoints.npy')
-pts2=np.load(file_base+'\keypoints2.npy')
-pts1 = pts1[:-1] # last point was out of boundry and i cbbs to fix boundary issues and add padding
-pts2 = pts2[:-1]
+# # points from SIFT 
+# pts1=np.load(file_base+'\keypoints.npy')
+# pts2=np.load(file_base+'\keypoints2.npy')
+# pts1 = pts1[:-1] # last point was out of boundry and i cbbs to fix boundary issues and add padding
+# pts2 = pts2[:-1]
 
 
 allPoints=[pts1, pts2]
